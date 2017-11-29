@@ -4,7 +4,8 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    @posts = Post.order("created_at DESC").page(params[:page])
+    
   end
 
   # GET /posts/1
@@ -70,6 +71,11 @@ class PostsController < ApplicationController
     @c = @post.comments.create(comment_params)
   end
   
+  def destroy_comment
+    @c = Comment.find(params[:comment_id]).destroy
+  end
+  
+  
   def like_post
      
       if Like.where(user_id: current_user.id, post_id: @post.id).first.nil?
@@ -82,6 +88,11 @@ class PostsController < ApplicationController
       puts "Like Post Success"
       @result=@result.frozen?
       
+  end
+  
+  def page_scroll
+    puts "haha"
+    @posts = Post.order("created_at DESC").page(params[:page])
   end
 
   private
